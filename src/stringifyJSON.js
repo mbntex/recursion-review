@@ -24,7 +24,15 @@ var stringifyJSON = function(obj) {
     }
     
     // object 
-    // return {...}
+    if (Object.prototype.toString.call(obj) === '[object Object]') {
+      string += '{';
+      for (var key in obj) {
+        string += `${key}: `;
+        recursiveStringify(obj[key]);
+        string += ', ';
+      }
+      string = string.slice(0, string.length - 2) + '}';
+    }
 
   };
   
