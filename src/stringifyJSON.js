@@ -5,4 +5,31 @@
 
 var stringifyJSON = function(obj) {
   // your code goes here
+  // primitive types - number, boolean, string 
+  var string = '';
+
+  var recursiveStringify = function(obj) {
+    if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean') {
+      string += obj; 
+    }
+
+    // array
+    if (Array.isArray(obj)) {
+      string += '[';
+      obj.forEach(val => {
+        recursiveStringify(val);
+        string += ', ';
+      });
+      string = string.slice(0, string.length - 2) + ']';
+    }
+    
+    // object 
+    // return {...}
+
+  };
+  
+  recursiveStringify(obj);
+
+  return string;
+
 };
