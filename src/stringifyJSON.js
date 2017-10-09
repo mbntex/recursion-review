@@ -9,29 +9,43 @@ var stringifyJSON = function(obj) {
   var string = '';
 
   var recursiveStringify = function(obj) {
-    if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean') {
-      string += obj; 
+    if (obj === null || typeof obj === 'number' || typeof obj === 'boolean') {
+      string += obj;
+    }
+
+    if (typeof obj === 'string') {
+      string += `"${obj}"`;
     }
 
     // array
     if (Array.isArray(obj)) {
-      string += '[';
-      obj.forEach(val => {
-        recursiveStringify(val);
-        string += ', ';
-      });
-      string = string.slice(0, string.length - 2) + ']';
+      if (obj.length === 0) {
+        string += '[]';
+      } else {   
+        string += '[';
+        obj.forEach(val => {
+          recursiveStringify(val);
+          string += ',';
+        });
+        string = string.slice(0, string.length > 1 ? string.length - 1 : string.length) + ']';
+      }
     }
     
     // object 
     if (Object.prototype.toString.call(obj) === '[object Object]') {
-      string += '{';
-      for (var key in obj) {
-        string += `${key}: `;
-        recursiveStringify(obj[key]);
-        string += ', ';
+      if (Object.keys(obj).length === 0) {
+        string += '{}';
+      } else {
+        string += '{';
+        for (var key in obj) {
+          if (typeof obj[key] !== 'undefined' && typeof obj[key] !== 'function') {
+            string += `"${key}":`;
+            recursiveStringify(obj[key]);
+            string += ',';
+          } 
+        }
+        string = string.slice(0, string.length > 1 ? string.length - 1 : string.length) + '}';
       }
-      string = string.slice(0, string.length - 2) + '}';
     }
 
   };
